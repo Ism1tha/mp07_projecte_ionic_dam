@@ -81,7 +81,7 @@ export default {
   data() {
     return {
       score: 0,
-      timeLeft: 3600,
+      timeLeft: 10,
       status: 0,
       lastRecord: 0,
       showingScore: false,
@@ -103,7 +103,7 @@ export default {
       this.status = 1;
       this.setupTapAnimation();
       this.score = 0;
-      this.timeLeft = 3600;
+      this.timeLeft = 10;
       this.timer = setInterval(() => {
         this.timeLeft--;
         if (this.timeLeft == 0) {
