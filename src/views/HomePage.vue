@@ -31,24 +31,28 @@
         </div>
       </div>
       <div id="container">
-        <template v-if="status == 0">
-          <!-- Ionic button -->
-          <ion-button @click="startGame" color="primary">Start Game</ion-button>
-        </template>
-        <template v-else-if="status == 1">
-          <ion-button ref="tapBtn" @click="addScore" color="warning">Tap me!</ion-button>
-        </template>
-        <template v-else-if="status == 2">
-          <template v-if="newRecord">
-            <ConfettiExplosion :particleCount="200" :floorHeight="screen.height" :floorWidth="screen.width" :colors="['#ff0000', '#00ff00', '#0000ff']" :duration="5000" :size="3" :speed="3" :opacity="0.9" :angle="60" :decay="0.9" :spread="360" :startVelocity="30" :elementSize="3" :elementCount="200" :zIndex="100" :random="Math.random" 
-              style="margin:auto;"></ConfettiExplosion>
-            <p>New record!</p>
+        <div ref="btnContainer">
+          <template v-if="status == 0">
+            <!-- Ionic button -->
+            <ion-button @click="startGame" color="primary">Start Game</ion-button>
           </template>
-          Your score: {{ score }}
-        </template>
-        <template v-else-if="status == 3">
-          <ion-button @click="startGame" color="success">Restart Game</ion-button>
-        </template>
+          <template v-else-if="status == 1">
+            <ion-button @click="addScore" color="warning">Tap me!</ion-button>
+          </template>
+          <template v-else-if="status == 2">
+            <template v-if="newRecord">
+              <ConfettiExplosion :particleCount="200" :floorHeight="screen.height" :floorWidth="screen.width"
+                :colors="['#ff0000', '#00ff00', '#0000ff']" :duration="5000" :size="3" :speed="3" :opacity="0.9"
+                :angle="60" :decay="0.9" :spread="360" :startVelocity="30" :elementSize="3" :elementCount="200"
+                :zIndex="100" :random="Math.random" style="margin:auto;"></ConfettiExplosion>
+              <p>New record!</p>
+            </template>
+            Your score: {{ score }}
+          </template>
+          <template v-else-if="status == 3">
+            <ion-button @click="startGame" color="success">Restart Game</ion-button>
+          </template>
+        </div>
       </div>
       <ion-toast :is-open="showingScore" :message="'La teva puntuació és de ' + score" :duration="5000"></ion-toast>
     </ion-content>
@@ -56,7 +60,6 @@
 </template>
 
 <script>
-import { ref } from 'vue';
 import { IonContent, IonHeader, IonPage, IonTitle, IonToolbar, IonButton, IonToast, IonAlert, createAnimation } from '@ionic/vue';
 import { heart } from 'ionicons/icons';
 import ConfettiExplosion from "vue-confetti-explosion";
@@ -137,14 +140,19 @@ export default {
       this.closeAuthor();
     },
     setupTapAnimation() {
-      console.log(this);
-      console.log(this.$refs.tapBtn);
+      var el = this.$refs.btnContainer;
       this.animation = createAnimation()
-        .addElement(this.tapBtn)
-        .duration(1500)
-        .iterations(Infinity)
-        .fromTo('transform', 'translateX(0px)', 'translateX(100px)')
-        .fromTo('opacity', '1', '0.2');
+        .duration(100)
+        .iterations(1)
+        .keyframes([
+          { offset: 0, transform: 'translateY(0)', easing: 'ease-out' },
+          { offset: 0.2, transform: 'translateY(-30px)', easing: 'ease-in' },
+          { offset: 0.4, transform: 'translateY(0)', easing: 'ease-out' },
+          { offset: 0.6, transform: 'translateY(-15px)', easing: 'ease-in' },
+          { offset: 0.8, transform: 'translateY(0)', easing: 'ease-out' },
+          { offset: 1, transform: 'translateY(0)' }
+        ]);
+      this.animation.addElement(el);
     }
   },
 }
@@ -153,7 +161,6 @@ export default {
 <style scoped>
 #container {
   text-align: center;
-
   position: absolute;
   left: 0;
   right: 0;
